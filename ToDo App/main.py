@@ -4,7 +4,7 @@ from typing import Optional, List
 
 app = FastAPI()
 
-# 1. The Model: It Defines what a Todo looks like
+# 1. The Model: It Defines what a Todo app looks like
 class Todo(BaseModel):
     id: int
     title: str
@@ -16,12 +16,12 @@ todo_db = []
 
 # --- ROUTES ---
 
-# GET: Fetch all todos
+# GET: Fetch all todos tasks
 @app.get("/todos", response_model=List[Todo])
 def get_todos():
     return todo_db
 
-# POST: Create a new todo
+# POST: Create a new todo task
 @app.post("/todos", response_model=Todo)
 def create_todo(todo: Todo):
     # Check if ID already exists
@@ -30,28 +30,28 @@ def create_todo(todo: Todo):
     todo_db.append(todo)
     return todo
 
-# GET: Fetch a single todo by ID
+# GET: Fetch a single todo task by ID
 @app.get("/todos/{todo_id}", response_model=Todo)
 def get_todo(todo_id: int):
     for todo in todo_db:
         if todo.id == todo_id:
             return todo
-    raise HTTPException(status_code=404, detail="Todo not found")
+    raise HTTPException(status_code=404, detail="Todo Task not found")
 
-# PUT: Update a todo
+# PUT: Update a todo task
 @app.put("/todos/{todo_id}", response_model=Todo)
 def update_todo(todo_id: int, updated_todo: Todo):
     for index, todo in enumerate(todo_db):
         if todo.id == todo_id:
             todo_db[index] = updated_todo
             return updated_todo
-    raise HTTPException(status_code=404, detail="Todo not found")
+    raise HTTPException(status_code=404, detail="Todo Task not found")
 
-# DELETE: Remove a todo
+# DELETE: Remove a todo task
 @app.delete("/todos/{todo_id}")
 def delete_todo(todo_id: int):
     for index, todo in enumerate(todo_db):
         if todo.id == todo_id:
             todo_db.pop(index)
-            return {"message": "Todo deleted successfully"}
+            return {"message": "Todo Task deleted successfully"}
     raise HTTPException(status_code=404, detail="Todo not found")
